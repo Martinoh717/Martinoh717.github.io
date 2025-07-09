@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>정비례와 반비례 완전 퀴즈</title>
+<style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .quiz-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .quiz-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-title {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question-type {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-bottom: 15px;
+        }
+
+        .graph-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .graph {
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.restart {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .result.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            height: 100%;
+            transition: width 0.3s;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+        }
+
+        .score-display {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .coordinate-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        .final-results {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .final-results h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .final-score {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .performance-badge {
+            display: inline-block;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px;
+        }
+
+        .badge-excellent { background: #28a745; }
+        .badge-good { background: #17a2b8; }
+        .badge-fair { background: #ffc107; color: #333; }
+        .badge-needs-practice { background: #dc3545; }
+    </style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>📐 정비례와 반비례 완전 퀴즈</h1>
+<p>15가지 다양한 문제로 완벽하게 마스터하세요!</p>
+</div>
+<div class="quiz-container">
+<div class="progress-bar">
+<div class="progress-fill" id="progressFill"></div>
+</div>
+<!-- 문제 1: 정비례 관계 찾기 -->
+<div class="quiz-card active" id="quiz1">
+<div class="question-type">기본 개념</div>
+<div class="question-title">문제 1: 정비례 관계 찾기</div>
+<p>다음 표에서 x와 y가 정비례 관계에 있는지 확인하고, 정비례상수를 구하세요.</p>
+<div class="table-container">
+<table>
+<tr><th>x</th><th>-4</th><th>-2</th><th>0</th><th>3</th><th>6</th></tr>
+<tr><th>y</th><th>6</th><th>3</th><th>0</th><th>-4.5</th><th>-9</th></tr>
+</table>
+</div>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph1" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>정비례 관계인가요?</label>
+<select id="answer1a">
+<option value="">선택하세요</option>
+<option value="예">예</option>
+<option value="아니오">아니오</option>
+</select>
+</div>
+<div class="input-group">
+<label>정비례상수는? (정비례 관계가 아니면 0)</label>
+<input id="answer1b" placeholder="정비례상수 입력" step="0.1" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(1)">답안 확인</button>
+<div class="result" id="result1"></div>
+</div>
+<!-- 문제 2: 반비례 관계 -->
+<div class="quiz-card" id="quiz2">
+<div class="question-type">기본 개념</div>
+<div class="question-title">문제 2: 반비례 관계</div>
+<p>x와 y가 반비례 관계에 있고, x = 4일 때 y = 6입니다.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph2" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>x = -3일 때 y의 값은?</label>
+<input id="answer2a" placeholder="y값 입력" step="0.1" type="number"/>
+</div>
+<div class="input-group">
+<label>y = -12일 때 x의 값은?</label>
+<input id="answer2b" placeholder="x값 입력" step="0.1" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(2)">답안 확인</button>
+<div class="result" id="result2"></div>
+</div>
+<!-- 문제 3: 좌표평면의 점 -->
+<div class="quiz-card" id="quiz3">
+<div class="question-type">좌표 변환</div>
+<div class="question-title">문제 3: 좌표평면의 점과 대칭</div>
+<p>점 A(4, -3)을 원점에 대하여 대칭이동시킨 점의 좌표를 구하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph3" width="400"></canvas>
+</div>
+<div class="coordinate-display">
+                    원래 점: A(4, -3)<br/>
+                    원점 대칭이동: (x, y) → (-x, -y)
+                </div>
+<div class="input-group">
+<label>대칭이동된 점의 x좌표</label>
+<input id="answer3a" placeholder="x좌표" type="number"/>
+</div>
+<div class="input-group">
+<label>대칭이동된 점의 y좌표</label>
+<input id="answer3b" placeholder="y좌표" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(3)">답안 확인</button>
+<div class="result" id="result3"></div>
+</div>
+<!-- 문제 4: 정비례 그래프 -->
+<div class="quiz-card" id="quiz4">
+<div class="question-type">그래프 해석</div>
+<div class="question-title">문제 4: 정비례 그래프의 성질</div>
+<p>정비례 함수 y = ax의 그래프가 점 (-2, 5)를 지납니다.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph4" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>정비례상수 a의 값은?</label>
+<input id="answer4a" placeholder="a값 입력" step="0.1" type="number"/>
+</div>
+<div class="input-group">
+<label>이 그래프 위의 점 중 x = 4일 때 y의 값은?</label>
+<input id="answer4b" placeholder="y값 입력" step="0.1" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(4)">답안 확인</button>
+<div class="result" id="result4"></div>
+</div>
+<!-- 문제 5: 반비례 그래프 -->
+<div class="quiz-card" id="quiz5">
+<div class="question-type">그래프 해석</div>
+<div class="question-title">문제 5: 반비례 그래프의 활용</div>
+<p>반비례 함수 y = k/x의 그래프가 점 (3, 8)을 지납니다.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph5" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>상수 k의 값은?</label>
+<input id="answer5a" placeholder="k값 입력" type="number"/>
+</div>
+<div class="input-group">
+<label>x = -6일 때 y의 값은?</label>
+<input id="answer5b" placeholder="y값 입력" step="0.1" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(5)">답안 확인</button>
+<div class="result" id="result5"></div>
+</div>
+<!-- 문제 6: 다중 선택 - 정비례 판별 -->
+<div class="quiz-card" id="quiz6">
+<div class="question-type">다중 선택</div>
+<div class="question-title">문제 6: 정비례 함수 판별</div>
+<p>다음 중 정비례 함수인 것을 모두 선택하세요.</p>
+<div class="options">
+<div class="option" onclick="toggleOption(this, '6a')">
+<strong>A)</strong> y = 3x
+                    </div>
+<div class="option" onclick="toggleOption(this, '6b')">
+<strong>B)</strong> y = 2x + 1
+                    </div>
+<div class="option" onclick="toggleOption(this, '6c')">
+<strong>C)</strong> y = -5x
+                    </div>
+<div class="option" onclick="toggleOption(this, '6d')">
+<strong>D)</strong> y = x²
+                    </div>
+</div>
+<button class="btn" onclick="checkAnswer(6)">답안 확인</button>
+<div class="result" id="result6"></div>
+</div>
+<!-- 문제 7: 실생활 응용 -->
+<div class="quiz-card" id="quiz7">
+<div class="question-type">실생활 응용</div>
+<div class="question-title">문제 7: 속력과 시간의 관계</div>
+<p>일정한 거리 120km를 가는데, 속력(x km/h)과 시간(y시간) 사이의 관계식을 구하고, 시속 40km로 갈 때의 시간을 구하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph7" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>관계식 y = ?/x에서 ?에 들어갈 수는?</label>
+<input id="answer7a" placeholder="상수 입력" type="number"/>
+</div>
+<div class="input-group">
+<label>시속 40km로 갈 때 걸리는 시간은?</label>
+<input id="answer7b" placeholder="시간(시) 입력" step="0.1" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(7)">답안 확인</button>
+<div class="result" id="result7"></div>
+</div>
+<!-- 문제 8: 그래프 읽기 -->
+<div class="quiz-card" id="quiz8">
+<div class="question-type">그래프 분석</div>
+<div class="question-title">문제 8: 그래프에서 값 읽기</div>
+<p>주어진 정비례 그래프를 보고 물음에 답하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph8" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>이 그래프의 기울기는?</label>
+<input id="answer8a" placeholder="기울기 입력" step="0.1" type="number"/>
+</div>
+<div class="input-group">
+<label>x = 6일 때 y의 값은?</label>
+<input id="answer8b" placeholder="y값 입력" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(8)">답안 확인</button>
+<div class="result" id="result8"></div>
+</div>
+<!-- 문제 9: 비례상수 비교 -->
+<div class="quiz-card" id="quiz9">
+<div class="question-type">비교 분석</div>
+<div class="question-title">문제 9: 비례상수 크기 비교</div>
+<p>다음 세 정비례 함수의 비례상수를 크기 순으로 나열하세요.</p>
+<div class="coordinate-display">
+                    함수 A: y = 2.5x<br/>
+                    함수 B: 점 (4, -6)을 지나는 정비례 함수<br/>
+                    함수 C: y = -3x
+                </div>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph9" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>비례상수를 작은 것부터 나열 (A, B, C 순서로)</label>
+<input id="answer9" placeholder="예: C, B, A" type="text"/>
+</div>
+<button class="btn" onclick="checkAnswer(9)">답안 확인</button>
+<div class="result" id="result9"></div>
+</div>
+<!-- 문제 10: 반비례 실생활 -->
+<div class="quiz-card" id="quiz10">
+<div class="question-type">실생활 응용</div>
+<div class="question-title">문제 10: 직사각형의 넓이</div>
+<p>넓이가 48cm²인 직사각형에서 가로의 길이를 x(cm), 세로의 길이를 y(cm)라 할 때의 관계를 분석하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph10" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>x와 y 사이의 관계식은? (y = ?/x 형태)</label>
+<input id="answer10a" placeholder="상수 입력" type="number"/>
+</div>
+<div class="input-group">
+<label>가로가 8cm일 때 세로의 길이는?</label>
+<input id="answer10b" placeholder="세로 길이(cm)" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(10)">답안 확인</button>
+<div class="result" id="result10"></div>
+</div>
+<!-- 문제 11: 좌표 변환 고급 -->
+<div class="quiz-card" id="quiz11">
+<div class="question-type">좌표 변환</div>
+<div class="question-title">문제 11: x축 대칭과 y축 대칭</div>
+<p>점 P(-3, 5)를 x축에 대하여 대칭이동한 점과 y축에 대하여 대칭이동한 점의 좌표를 구하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph11" width="400"></canvas>
+</div>
+<div class="coordinate-display">
+                    원래 점: P(-3, 5)<br/>
+                    x축 대칭: (x, y) → (x, -y)<br/>
+                    y축 대칭: (x, y) → (-x, y)
+                </div>
+<div class="input-group">
+<label>x축 대칭이동한 점의 좌표 (x, y)</label>
+<input id="answer11a" placeholder="예: (-3, -5)" type="text"/>
+</div>
+<div class="input-group">
+<label>y축 대칭이동한 점의 좌표 (x, y)</label>
+<input id="answer11b" placeholder="예: (3, 5)" type="text"/>
+</div>
+<button class="btn" onclick="checkAnswer(11)">답안 확인</button>
+<div class="result" id="result11"></div>
+</div>
+<!-- 문제 12: 복합 함수 -->
+<div class="quiz-card" id="quiz12">
+<div class="question-type">복합 문제</div>
+<div class="question-title">문제 12: 두 함수의 교점</div>
+<p>정비례 함수 y = 2x와 반비례 함수 y = 8/x의 교점의 좌표를 구하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph12" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>교점의 x좌표 (양수)</label>
+<input id="answer12a" placeholder="x좌표" type="number"/>
+</div>
+<div class="input-group">
+<label>교점의 y좌표</label>
+<input id="answer12b" placeholder="y좌표" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(12)">답안 확인</button>
+<div class="result" id="result12"></div>
+</div>
+<!-- 문제 13: 그래프 선택 -->
+<div class="quiz-card" id="quiz13">
+<div class="question-type">그래프 선택</div>
+<div class="question-title">문제 13: 올바른 그래프 찾기</div>
+<p>함수 y = -2/x의 그래프의 특징으로 옳은 것을 모두 선택하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph13" width="400"></canvas>
+</div>
+<div class="options">
+<div class="option" onclick="toggleOption(this, '13a')">
+                        제2사분면과 제4사분면을 지난다
+                    </div>
+<div class="option" onclick="toggleOption(this, '13b')">
+                        원점을 지난다
+                    </div>
+<div class="option" onclick="toggleOption(this, '13c')">
+                        x축, y축과 만나지 않는다
+                    </div>
+<div class="option" onclick="toggleOption(this, '13d')">
+                        제1사분면과 제3사분면을 지난다
+                    </div>
+</div>
+<button class="btn" onclick="checkAnswer(13)">답안 확인</button>
+<div class="result" id="result13"></div>
+</div>
+<!-- 문제 14: 응용 계산 -->
+<div class="quiz-card" id="quiz14">
+<div class="question-type">응용 계산</div>
+<div class="question-title">문제 14: 비례관계 활용</div>
+<p>어떤 일을 하는데 사람 수와 걸리는 시간이 반비례 관계입니다. 6명이 일하면 8시간이 걸립니다.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph14" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>4명이 일하면 몇 시간이 걸리나요?</label>
+<input id="answer14a" placeholder="시간 입력" type="number"/>
+</div>
+<div class="input-group">
+<label>12시간 안에 끝내려면 최소 몇 명이 필요한가요?</label>
+<input id="answer14b" placeholder="사람 수 입력" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(14)">답안 확인</button>
+<div class="result" id="result14"></div>
+</div>
+<!-- 문제 15: 종합 문제 -->
+<div class="quiz-card" id="quiz15">
+<div class="question-type">종합 문제</div>
+<div class="question-title">문제 15: 최종 도전 문제</div>
+<p>점 A(2, 6)을 지나는 반비례 함수와 정비례 함수 y = 3x가 만나는 점의 개수를 구하고, 그 교점의 좌표를 모두 구하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph15" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>교점의 개수</label>
+<input id="answer15a" placeholder="개수" type="number"/>
+</div>
+<div class="input-group">
+<label>첫 번째 교점의 x좌표</label>
+<input id="answer15b" placeholder="x좌표" type="number"/>
+</div>
+<div class="input-group">
+<label>두 번째 교점의 x좌표 (있는 경우)</label>
+<input id="answer15c" placeholder="x좌표" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(15)">답안 확인</button>
+<div class="result" id="result15"></div>
+</div>
+<!-- 최종 결과 화면 -->
+
+<!-- 문제 16: 삼각형 넓이 (좌표) -->
+<div class="quiz-card" id="quiz16">
+<div class="question-type">좌표평면 심화</div>
+<div class="question-title">문제 16: 좌표로 주어진 삼각형의 넓이</div>
+<p>점 A(1, 2), B(5, 2), C(3, 6)으로 이루어진 삼각형의 넓이를 구하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph16" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>삼각형의 넓이</label>
+<input id="answer16" placeholder="넓이 입력" step="0.1" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(16)">답안 확인</button>
+<div class="result" id="result16"></div>
+</div>
+<!-- 문제 17: 사각형 넓이와 대각선 길이 -->
+<div class="quiz-card" id="quiz17">
+<div class="question-type">좌표평면 심화</div>
+<div class="question-title">문제 17: 좌표 사각형의 넓이와 대각선 길이</div>
+<p>점 A(0, 0), B(4, 0), C(4, 3), D(0, 3)으로 이루어진 사각형 ABCD에 대하여 다음을 구하세요.</p>
+<div class="graph-container">
+<canvas class="graph" height="300" id="graph17" width="400"></canvas>
+</div>
+<div class="input-group">
+<label>넓이</label>
+<input id="answer17a" placeholder="넓이(cm²)" type="number"/>
+</div>
+<div class="input-group">
+<label>대각선 AC의 길이</label>
+<input id="answer17b" placeholder="길이 입력" step="0.01" type="number"/>
+</div>
+<button class="btn" onclick="checkAnswer(17)">답안 확인</button>
+<div class="result" id="result17"></div>
+</div>
+<!-- 문제 18: 삼각형 유형 판단 -->
+<div class="quiz-card" id="quiz18">
+<div class="question-type">좌표 도형 판별</div>
+<div class="question-title">문제 18: 도형의 유형 판별</div>
+<p>점 A(1, 2), B(4, 6), C(7, 2)가 이루는 삼각형의 유형을 판단하세요.</p>
+<div class="input-group">
+<label>삼각형의 유형은?</label>
+<select id="answer18">
+<option value="">선택하세요</option>
+<option value="이등변삼각형">이등변삼각형</option>
+<option value="직각삼각형">직각삼각형</option>
+<option value="정삼각형">정삼각형</option>
+<option value="일반삼각형">일반삼각형</option>
+</select>
+</div>
+<button class="btn" onclick="checkAnswer(18)">답안 확인</button>
+<div class="result" id="result18"></div>
+</div>
+<div class="final-results" id="finalResults">
+<h2>🎉 퀴즈 완료!</h2>
+<div class="final-score" id="finalScore"></div>
+<div id="performanceBadge"></div>
+<p id="encouragementMessage"></p>
+<button class="btn restart" onclick="restartQuiz()">다시 시작하기</button>
+</div>
+<div class="navigation">
+<button class="btn" id="prevBtn" onclick="previousQuestion()">이전 문제</button>
+<div class="score-display" id="scoreDisplay">점수: 0/15</div>
+<button class="btn" id="nextBtn" onclick="nextQuestion()">다음 문제</button>
+</div>
+</div>
+</div>
+<script>
+        let currentQuestion = 1;
+        let score = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = 18;
+        const selectedOptions = {};
+
+        // 선택지 토글 함수
+        function toggleOption(element, optionId) {
+            if (!selectedOptions[currentQuestion]) {
+                selectedOptions[currentQuestion] = new Set();
+            }
+            
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedOptions[currentQuestion].delete(optionId);
+            } else {
+                element.classList.add('selected');
+                selectedOptions[currentQuestion].add(optionId);
+            }
+        }
+
+        // 그래프 그리기 함수들
+        function drawCoordinateSystem(canvas, centerX = 200, centerY = 150) {
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 격자 그리기
+            ctx.strokeStyle = '#f0f0f0';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= canvas.width; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(i, 0);
+                ctx.lineTo(i, canvas.height);
+                ctx.stroke();
+            }
+            for (let i = 0; i <= canvas.height; i += 20) {
+                ctx.beginPath();
+                ctx.moveTo(0, i);
+                ctx.lineTo(canvas.width, i);
+                ctx.stroke();
+            }
+
+            // 축 그리기
+            ctx.strokeStyle = '#333';
+            ctx.lineWidth = 2;
+            // x축
+            ctx.beginPath();
+            ctx.moveTo(0, centerY);
+            ctx.lineTo(canvas.width, centerY);
+            ctx.stroke();
+            // y축
+            ctx.beginPath();
+            ctx.moveTo(centerX, 0);
+            ctx.lineTo(centerX, canvas.height);
+            ctx.stroke();
+
+            // 숫자 표시
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            for (let i = -10; i <= 10; i++) {
+                if (i !== 0) {
+                    ctx.fillText(i.toString(), centerX + i * 20, centerY + 15);
+                    ctx.fillText((-i).toString(), centerX - 5, centerY - i * 20 + 5);
+                }
+            }
+        }
+
+        function drawPoint(canvas, x, y, color = '#667eea', label = '') {
+            const ctx = canvas.getContext('2d');
+            const centerX = 200, centerY = 150;
+            const pixelX = centerX + x * 20;
+            const pixelY = centerY - y * 20;
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(pixelX, pixelY, 6, 0, 2 * Math.PI);
+            ctx.fill();
+
+            if (label) {
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                ctx.fillText(label, pixelX + 8, pixelY - 8);
+            }
+        }
+
+        function drawLine(canvas, slope, color = '#667eea') {
+            const ctx = canvas.getContext('2d');
+            const centerX = 200, centerY = 150;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            const x1 = -10, y1 = slope * x1;
+            const x2 = 10, y2 = slope * x2;
+            
+            ctx.moveTo(centerX + x1 * 20, centerY - y1 * 20);
+            ctx.lineTo(centerX + x2 * 20, centerY - y2 * 20);
+            ctx.stroke();
+        }
+
+        function drawHyperbola(canvas, k, color = '#667eea') {
+            const ctx = canvas.getContext('2d');
+            const centerX = 200, centerY = 150;
+            
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            
+            // 양의 x 부분
+            ctx.beginPath();
+            for (let x = 0.1; x <= 10; x += 0.1) {
+                const y = k / x;
+                if (Math.abs(y) <= 10) {
+                    const pixelX = centerX + x * 20;
+                    const pixelY = centerY - y * 20;
+                    if (x === 0.1) ctx.moveTo(pixelX, pixelY);
+                    else ctx.lineTo(pixelX, pixelY);
+                }
+            }
+            ctx.stroke();
+            
+            // 음의 x 부분
+            ctx.beginPath();
+            for (let x = -0.1; x >= -10; x -= 0.1) {
+                const y = k / x;
+                if (Math.abs(y) <= 10) {
+                    const pixelX = centerX + x * 20;
+                    const pixelY = centerY - y * 20;
+                    if (x === -0.1) ctx.moveTo(pixelX, pixelY);
+                    else ctx.lineTo(pixelX, pixelY);
+                }
+            }
+            ctx.stroke();
+        }
+
+        // 각 문제별 그래프 그리기 함수들
+        function drawQuiz1Graph() {
+            const canvas = document.getElementById('graph1');
+            drawCoordinateSystem(canvas);
+            
+            const points = [[-4, 6], [-2, 3], [0, 0], [3, -4.5], [6, -9]];
+            points.forEach((point, index) => {
+                drawPoint(canvas, point[0], point[1], '#667eea', `(${point[0]}, ${point[1]})`);
+            });
+            
+            drawLine(canvas, -1.5, '#ff6b6b');
+        }
+
+        function drawQuiz2Graph() {
+            const canvas = document.getElementById('graph2');
+            drawCoordinateSystem(canvas);
+            
+            drawHyperbola(canvas, 24, '#667eea');
+            drawPoint(canvas, 4, 6, '#ff6b6b', '(4, 6)');
+            drawPoint(canvas, -3, -8, '#ff6b6b', '(-3, -8)');
+            drawPoint(canvas, -2, -12, '#ff6b6b', '(-2, -12)');
+        }
+
+        function drawQuiz3Graph() {
+            const canvas = document.getElementById('graph3');
+            drawCoordinateSystem(canvas);
+            
+            drawPoint(canvas, 4, -3, '#667eea', 'A(4, -3)');
+            drawPoint(canvas, -4, 3, '#ff6b6b', 'A\'(-4, 3)');
+            
+            // 대칭 표시를 위한 점선
+            const ctx = canvas.getContext('2d');
+            const centerX = 200, centerY = 150;
+            ctx.setLineDash([5, 5]);
+            ctx.strokeStyle = '#999';
+            ctx.beginPath();
+            ctx.moveTo(centerX + 4 * 20, centerY - (-3) * 20);
+            ctx.lineTo(centerX, centerY);
+            ctx.lineTo(centerX + (-4) * 20, centerY - 3 * 20);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function drawQuiz4Graph() {
+            const canvas = document.getElementById('graph4');
+            drawCoordinateSystem(canvas);
+            
+            drawLine(canvas, -2.5, '#667eea');
+            drawPoint(canvas, -2, 5, '#ff6b6b', '(-2, 5)');
+            drawPoint(canvas, 4, -10, '#ff6b6b', '(4, -10)');
+        }
+
+        function drawQuiz5Graph() {
+            const canvas = document.getElementById('graph5');
+            drawCoordinateSystem(canvas);
+            
+            drawHyperbola(canvas, 24, '#667eea');
+            drawPoint(canvas, 3, 8, '#ff6b6b', '(3, 8)');
+            drawPoint(canvas, -6, -4, '#ff6b6b', '(-6, -4)');
+        }
+
+        function drawQuiz7Graph() {
+            const canvas = document.getElementById('graph7');
+            drawCoordinateSystem(canvas);
+            
+            drawHyperbola(canvas, 120, '#667eea');
+            drawPoint(canvas, 40, 3, '#ff6b6b', '(40, 3)');
+            drawPoint(canvas, 60, 2, '#ff6b6b', '(60, 2)');
+        }
+
+        function drawQuiz8Graph() {
+            const canvas = document.getElementById('graph8');
+            drawCoordinateSystem(canvas);
+            
+            drawLine(canvas, 2, '#667eea');
+            drawPoint(canvas, 3, 6, '#ff6b6b', '(3, 6)');
+            drawPoint(canvas, 6, 12, '#ff6b6b', '(6, 12)');
+        }
+
+        function drawQuiz9Graph() {
+            const canvas = document.getElementById('graph9');
+            drawCoordinateSystem(canvas);
+            
+            drawLine(canvas, 2.5, '#ff6b6b'); // A
+            drawLine(canvas, -1.5, '#00c851'); // B
+            drawLine(canvas, -3, '#667eea'); // C
+            
+            drawPoint(canvas, 4, -6, '#00c851', 'B(4, -6)');
+        }
+
+        function drawQuiz10Graph() {
+            const canvas = document.getElementById('graph10');
+            drawCoordinateSystem(canvas);
+            
+            drawHyperbola(canvas, 48, '#667eea');
+            drawPoint(canvas, 8, 6, '#ff6b6b', '(8, 6)');
+            drawPoint(canvas, 6, 8, '#ff6b6b', '(6, 8)');
+        }
+
+        function drawQuiz11Graph() {
+            const canvas = document.getElementById('graph11');
+            drawCoordinateSystem(canvas);
+            
+            drawPoint(canvas, -3, 5, '#667eea', 'P(-3, 5)');
+            drawPoint(canvas, -3, -5, '#ff6b6b', 'x축 대칭');
+            drawPoint(canvas, 3, 5, '#00c851', 'y축 대칭');
+        }
+
+        function drawQuiz12Graph() {
+            const canvas = document.getElementById('graph12');
+            drawCoordinateSystem(canvas);
+            
+            drawLine(canvas, 2, '#667eea');
+            drawHyperbola(canvas, 8, '#ff6b6b');
+            drawPoint(canvas, 2, 4, '#00c851', '(2, 4)');
+            drawPoint(canvas, -2, -4, '#00c851', '(-2, -4)');
+        }
+
+        function drawQuiz13Graph() {
+            const canvas = document.getElementById('graph13');
+            drawCoordinateSystem(canvas);
+            
+            drawHyperbola(canvas, -2, '#667eea');
+            drawPoint(canvas, -1, 2, '#ff6b6b', '(-1, 2)');
+            drawPoint(canvas, 2, -1, '#ff6b6b', '(2, -1)');
+        }
+
+        function drawQuiz14Graph() {
+            const canvas = document.getElementById('graph14');
+            drawCoordinateSystem(canvas);
+            
+            drawHyperbola(canvas, 48, '#667eea');
+            drawPoint(canvas, 6, 8, '#ff6b6b', '(6, 8)');
+            drawPoint(canvas, 4, 12, '#ff6b6b', '(4, 12)');
+        }
+
+        function drawQuiz15Graph() {
+            const canvas = document.getElementById('graph15');
+            drawCoordinateSystem(canvas);
+            
+            drawHyperbola(canvas, 12, '#667eea');
+            drawLine(canvas, 3, '#ff6b6b');
+            drawPoint(canvas, 2, 6, '#00c851', 'A(2, 6)');
+            drawPoint(canvas, 2, 6, '#00c851', '교점 1');
+            drawPoint(canvas, -2, -6, '#00c851', '교점 2');
+        }
+
+        // 답안 확인 함수
+        function checkAnswer(questionNum) {
+            if (answeredQuestions.has(questionNum)) {
+                return; // 이미 답한 문제는 점수 중복 방지
+            }
+
+            let correct = false;
+            let message = '';
+
+            switch(questionNum) {
+                case 1:
+                    const ans1a = document.getElementById('answer1a').value;
+                    const ans1b = parseFloat(document.getElementById('answer1b').value);
+                    if (ans1a === '예' && ans1b === -1.5) {
+                        correct = true;
+                        message = '정답입니다! 모든 점이 y = -1.5x 직선 위에 있습니다.';
+                    } else {
+                        message = '틀렸습니다. 정비례 관계이고 정비례상수는 -1.5입니다.';
+                    }
+                    break;
+
+                case 2:
+                    const ans2a = parseFloat(document.getElementById('answer2a').value);
+                    const ans2b = parseFloat(document.getElementById('answer2b').value);
+                    if (ans2a === -8 && ans2b === -2) {
+                        correct = true;
+                        message = '정답입니다! 반비례상수 k = 24를 이용했습니다.';
+                    } else {
+                        message = '틀렸습니다. k = 4 × 6 = 24이므로 x = -3일 때 y = -8, y = -12일 때 x = -2입니다.';
+                    }
+                    break;
+
+                case 3:
+                    const ans3a = parseInt(document.getElementById('answer3a').value);
+                    const ans3b = parseInt(document.getElementById('answer3b').value);
+                    if (ans3a === -4 && ans3b === 3) {
+                        correct = true;
+                        message = '정답입니다! 원점 대칭은 (x, y) → (-x, -y)입니다.';
+                    } else {
+                        message = '틀렸습니다. 원점 대칭이동된 점은 (-4, 3)입니다.';
+                    }
+                    break;
+
+                case 4:
+                    const ans4a = parseFloat(document.getElementById('answer4a').value);
+                    const ans4b = parseFloat(document.getElementById('answer4b').value);
+                    if (ans4a === -2.5 && ans4b === -10) {
+                        correct = true;
+                        message = '정답입니다! a = 5/(-2) = -2.5이고, x = 4일 때 y = -10입니다.';
+                    } else {
+                        message = '틀렸습니다. a = -2.5이고, x = 4일 때 y = -10입니다.';
+                    }
+                    break;
+
+                case 5:
+                    const ans5a = parseInt(document.getElementById('answer5a').value);
+                    const ans5b = parseFloat(document.getElementById('answer5b').value);
+                    if (ans5a === 24 && ans5b === -4) {
+                        correct = true;
+                        message = '정답입니다! k = 3 × 8 = 24이고, x = -6일 때 y = -4입니다.';
+                    } else {
+                        message = '틀렸습니다. k = 24이고, x = -6일 때 y = -4입니다.';
+                    }
+                    break;
+
+                case 6:
+                    const selected6 = selectedOptions[6] || new Set();
+                    if (selected6.has('6a') && selected6.has('6c') && selected6.size === 2) {
+                        correct = true;
+                        message = '정답입니다! A(y = 3x)와 C(y = -5x)가 정비례 함수입니다.';
+                    } else {
+                        message = '틀렸습니다. 정비례 함수는 y = ax 형태입니다. A와 C가 정답입니다.';
+                    }
+                    break;
+
+                case 7:
+                    const ans7a = parseInt(document.getElementById('answer7a').value);
+                    const ans7b = parseFloat(document.getElementById('answer7b').value);
+                    if (ans7a === 120 && ans7b === 3) {
+                        correct = true;
+                        message = '정답입니다! 거리 = 속력 × 시간이므로 y = 120/x입니다.';
+                    } else {
+                        message = '틀렸습니다. y = 120/x이고, x = 40일 때 y = 3시간입니다.';
+                    }
+                    break;
+
+                case 8:
+                    const ans8a = parseFloat(document.getElementById('answer8a').value);
+                    const ans8b = parseInt(document.getElementById('answer8b').value);
+                    if (ans8a === 2 && ans8b === 12) {
+                        correct = true;
+                        message = '정답입니다! 기울기는 2이고, x = 6일 때 y = 12입니다.';
+                    } else {
+                        message = '틀렸습니다. 기울기는 2이고, x = 6일 때 y = 2 × 6 = 12입니다.';
+                    }
+                    break;
+
+                case 9:
+                    const ans9 = document.getElementById('answer9').value.trim();
+                    if (ans9 === 'C, B, A' || ans9 === 'C,B,A') {
+                        correct = true;
+                        message = '정답입니다! C(-3) < B(-1.5) < A(2.5) 순서입니다.';
+                    } else {
+                        message = '틀렸습니다. 함수 B의 비례상수는 -6/4 = -1.5입니다. 순서: C, B, A';
+                    }
+                    break;
+
+                case 10:
+                    const ans10a = parseInt(document.getElementById('answer10a').value);
+                    const ans10b = parseInt(document.getElementById('answer10b').value);
+                    if (ans10a === 48 && ans10b === 6) {
+                        correct = true;
+                        message = '정답입니다! xy = 48이므로 y = 48/x입니다.';
+                    } else {
+                        message = '틀렸습니다. 넓이 = 가로 × 세로 = 48이므로 y = 48/x, x = 8일 때 y = 6입니다.';
+                    }
+                    break;
+
+                case 11:
+                    const ans11a = document.getElementById('answer11a').value.trim();
+                    const ans11b = document.getElementById('answer11b').value.trim();
+                    if ((ans11a === '(-3, -5)' || ans11a === '(-3,-5)') && 
+                        (ans11b === '(3, 5)' || ans11b === '(3,5)')) {
+                        correct = true;
+                        message = '정답입니다! x축 대칭: (-3, -5), y축 대칭: (3, 5)';
+                    } else {
+                        message = '틀렸습니다. x축 대칭: (-3, -5), y축 대칭: (3, 5)입니다.';
+                    }
+                    break;
+
+                case 12:
+                    const ans12a = parseInt(document.getElementById('answer12a').value);
+                    const ans12b = parseInt(document.getElementById('answer12b').value);
+                    if (ans12a === 2 && ans12b === 4) {
+                        correct = true;
+                        message = '정답입니다! 2x = 8/x에서 x² = 4, x = 2일 때 y = 4입니다.';
+                    } else {
+                        message = '틀렸습니다. 2x = 8/x를 풀면 x = 2, y = 4입니다.';
+                    }
+                    break;
+
+                case 13:
+                    const selected13 = selectedOptions[13] || new Set();
+                    if (selected13.has('13a') && selected13.has('13c') && selected13.size === 2) {
+                        correct = true;
+                        message = '정답입니다! y = -2/x는 제2, 4사분면을 지나고 축과 만나지 않습니다.';
+                    } else {
+                        message = '틀렸습니다. y = -2/x는 제2사분면과 제4사분면을 지나고, x축, y축과 만나지 않습니다.';
+                    }
+                    break;
+
+                case 14:
+                    const ans14a = parseInt(document.getElementById('answer14a').value);
+                    const ans14b = parseInt(document.getElementById('answer14b').value);
+                    if (ans14a === 12 && ans14b === 4) {
+                        correct = true;
+                        message = '정답입니다! k = 6 × 8 = 48이므로 4명일 때 12시간, 12시간에는 4명 필요합니다.';
+                    } else {
+                        message = '틀렸습니다. k = 48이므로 4명일 때 12시간, 12시간 안에는 최소 4명이 필요합니다.';
+                    }
+                    break;
+
+                case 15:
+                    const ans15a = parseInt(document.getElementById('answer15a').value);
+                    const ans15b = parseInt(document.getElementById('answer15b').value);
+                    const ans15c = parseInt(document.getElementById('answer15c').value);
+                    if (ans15a === 2 && ans15b === 2 && ans15c === -2) {
+                        correct = true;
+                        message = '정답입니다! 반비례 함수 y = 12/x와 y = 3x의 교점은 (2, 6)과 (-2, -6)입니다.';
+                    } else {
+                        message = '틀렸습니다. A(2, 6)을 지나는 반비례 함수는 y = 12/x이고, 3x = 12/x에서 교점은 2개입니다.';
+                    }
+                    break;
+            }
+
+            const resultDiv = document.getElementById(`result${questionNum}`);
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${correct ? 'correct' : 'incorrect'}`;
+            resultDiv.style.display = 'block';
+
+            if (correct && !answeredQuestions.has(questionNum)) {
+                score++;
+                answeredQuestions.add(questionNum);
+                updateScore();
+                
+                // 마지막 문제면 최종 결과 표시
+                if (questionNum === totalQuestions) {
+                    setTimeout(() => showFinalResults(), 1500);
+                }
+            }
+        }
+
+        function updateScore() {
+            document.getElementById('scoreDisplay').textContent = `점수: ${score}/${totalQuestions}`;
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        function showQuestion(questionNum) {
+            // 모든 문제 카드 숨기기
+            for (let i = 1; i <= totalQuestions; i++) {
+                document.getElementById(`quiz${i}`).classList.remove('active');
+            }
+            
+            // 현재 문제 카드 보이기
+            document.getElementById(`quiz${questionNum}`).classList.add('active');
+            
+            // 그래프 그리기
+            setTimeout(() => {
+                const drawFunctions = [
+                    null, drawQuiz1Graph, drawQuiz2Graph, drawQuiz3Graph, drawQuiz4Graph, drawQuiz5Graph,
+                    null, drawQuiz7Graph, drawQuiz8Graph, drawQuiz9Graph, drawQuiz10Graph,
+                    drawQuiz11Graph, drawQuiz12Graph, drawQuiz13Graph, drawQuiz14Graph, drawQuiz15Graph
+                ];
+                
+                if (drawFunctions[questionNum]) {
+                    drawFunctions[questionNum]();
+                }
+            }, 100);
+
+            // 버튼 상태 업데이트
+            document.getElementById('prevBtn').style.display = questionNum === 1 ? 'none' : 'inline-block';
+            document.getElementById('nextBtn').style.display = questionNum === totalQuestions ? 'none' : 'inline-block';
+            
+            updateProgress();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        function showFinalResults() {
+            const percentage = (score / totalQuestions) * 100;
+            const finalScore = document.getElementById('finalScore');
+            const badge = document.getElementById('performanceBadge');
+            const message = document.getElementById('encouragementMessage');
+            
+            finalScore.textContent = `최종 점수: ${score}/${totalQuestions} (${percentage.toFixed(1)}%)`;
+            
+            let badgeClass, badgeText, encouragement;
+            
+            if (percentage >= 90) {
+                badgeClass = 'badge-excellent';
+                badgeText = '🏆 완벽함';
+                encouragement = '정말 훌륭합니다! 정비례와 반비례를 완벽하게 이해하고 있네요!';
+            } else if (percentage >= 75) {
+                badgeClass = 'badge-good';
+                badgeText = '🌟 우수함';
+                encouragement = '정말 잘했어요! 대부분의 개념을 잘 이해하고 있습니다.';
+            } else if (percentage >= 60) {
+                badgeClass = 'badge-fair';
+                badgeText = '👍 양호함';
+                encouragement = '좋은 시작이에요! 조금 더 연습하면 더욱 향상될 거예요.';
+            } else {
+                badgeClass = 'badge-needs-practice';
+                badgeText = '📚 연습 필요';
+                encouragement = '다시 한 번 도전해보세요! 연습을 통해 실력을 향상시킬 수 있어요.';
+            }
+            
+            badge.innerHTML = `<div class="performance-badge ${badgeClass}">${badgeText}</div>`;
+            message.textContent = encouragement;
+            
+            document.getElementById('finalResults').style.display = 'block';
+        }
+
+        function restartQuiz() {
+            // 모든 변수 초기화
+            currentQuestion = 1;
+            score = 0;
+            answeredQuestions.clear();
+            
+            // 모든 입력 필드 초기화
+            for (let i = 1; i <= totalQuestions; i++) {
+                const inputs = document.querySelectorAll(`#quiz${i} input, #quiz${i} select`);
+                inputs.forEach(input => input.value = '');
+                
+                const result = document.getElementById(`result${i}`);
+                if (result) result.style.display = 'none';
+            }
+            
+            // 선택된 옵션들 초기화
+            Object.keys(selectedOptions).forEach(key => delete selectedOptions[key]);
+            document.querySelectorAll('.option.selected').forEach(option => {
+                option.classList.remove('selected');
+            });
+            
+            // 최종 결과 화면 숨기기
+            document.getElementById('finalResults').style.display = 'none';
+            
+            // 첫 번째 문제로 이동
+            showQuestion(1);
+            updateScore();
+        }
+
+        // 초기화
+        window.onload = function() {
+            showQuestion(1);
+            updateScore();
+        };
+    </script>
+</body>
+</html>
